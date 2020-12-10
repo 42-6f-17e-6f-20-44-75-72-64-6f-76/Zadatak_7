@@ -5,10 +5,8 @@
 #define foreach(p,head) \
 	for (Position p = head; p != NULL; p = p->next) 
 
-
 #include <stdio.h>
 #include <stdlib.h>
-
 
 struct _node;
 typedef struct _node* Position;
@@ -44,13 +42,17 @@ int main(void) {
 
 int pop(Position head) {
 	if (head->next == NULL)
+	{
+		printf("\nERROR: Nothing to POP!\n");
 		return 404;
+	}
 
 	Position tempP = head->next;
+	
 	int temp = tempP->coef;
-
+	
 	head->next = tempP->next;
-
+	
 	free(tempP);
 	tempP = NULL;
 
@@ -66,14 +68,12 @@ int push(Position where, Position what) {
 Position createNode(int k) {
 
 	Position el = NULL;
-
 	el = (Position)malloc(sizeof(Node));
 
 	if (NULL == el) {
 		printf("Memory allocation failed!\r\n");
 		return NULL;
 	}
-
 	el->coef = k;
 	el->next = NULL;
 
@@ -91,24 +91,18 @@ int printList(Position head) {
 				printf(",");
 		}
 	}
-
-	else {
+	else 
 		printf("\r\n\rLIST IS EMPTY.\r\n");
-	}
-
+	
 	puts("\n");
-
 	return 0;
 }
 
 int calculatePostfix(Position p, char* file,int *r) {
-
-
 	FILE* fp = NULL;
 	int n = 0, d, res = 0;
 	char c;
 	char mem[POSTFIX_LEN];
-
 	char* buffer = mem;
 
 	fp = fopen(file, "r");
@@ -130,7 +124,6 @@ int calculatePostfix(Position p, char* file,int *r) {
 		if (sscanf(buffer, "%d %n", &d, &n) >= 1) {
 			buffer += n;
 			printf("PUSH: %d ", d);
-
 			push(p, createNode(d));
 
 		}
@@ -141,20 +134,14 @@ int calculatePostfix(Position p, char* file,int *r) {
 			res = calculate(pop(p), pop(p), c);
 			push(p, createNode(res));
 			res = 0;
-
-
 		}
 		else {
-			buffer++;//ERROR occured->skip one character and repeat
+			buffer++;//ERROR occured->skip one character and repeat loop
 			perror(stderr);
 		}
-
 		printList(p);
-
 	}
 	*r = pop(p);
-	//printf("Rezultat iznosi: %d", pop(p));
-
 	return 0;
 }
 
@@ -173,8 +160,8 @@ int calculate(int res,  int a, char c) {
 		return res / a;
 		break;
 	default:
+		printf("\nERROR: Not valid operand '%c' , inspect your postfix expression please.\n", c);
 		return res;
-		printf("ERROR: Not valid operand '%c'\n", c);
 		break;
 	}
 
